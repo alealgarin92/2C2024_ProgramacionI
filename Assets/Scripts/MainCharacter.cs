@@ -7,12 +7,17 @@ public class MainCharacter : MonoBehaviour
     [SerializeField] private float movementSpeed;
     [SerializeField] private Bullet bullet;
     [SerializeField] private float shootingCooldownBase;
+    [SerializeField] private PermanentBullet permanentBullet;
+
+    [SerializeField] private float maxHealth;
+    [SerializeField] private float health;
 
     private float shootingCooldown;
 
     private void Awake()
     {
         shootingCooldown = shootingCooldownBase;
+        health = maxHealth;
     }
 
     private void Update()
@@ -50,6 +55,11 @@ public class MainCharacter : MonoBehaviour
             Shoot();
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(permanentBullet, transform.position, transform.rotation); 
+        }
+
         movementDir = movementDir.normalized;
         Move(movementDir);
     }
@@ -71,5 +81,10 @@ public class MainCharacter : MonoBehaviour
         
 
         transform.position += direction * movementSpeed * Time.deltaTime;
+    }
+
+    public void Heal(float healAmount)
+    {
+        health += healAmount;
     }
 }
