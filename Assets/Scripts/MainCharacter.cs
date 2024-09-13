@@ -8,9 +8,14 @@ public class MainCharacter : MonoBehaviour
     [SerializeField] private Bullet bullet;
     [SerializeField] private float shootingCooldownBase;
     [SerializeField] private PermanentBullet permanentBullet;
+    [SerializeField] private Transform raycastOrigin;
 
     [SerializeField] private float maxHealth;
+    [SerializeField] private Rigidbody rb;
     [SerializeField] private float health;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpCheckDistance;
+    [SerializeField] private LayerMask groundLayer;
 
     private float shootingCooldown;
 
@@ -52,23 +57,46 @@ public class MainCharacter : MonoBehaviour
         if (Input.GetButton("Shoot") && shootingCooldown <= 0) 
         {
             shootingCooldown = shootingCooldownBase;
-            Shoot();
+            //Shoot();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(permanentBullet, transform.position, transform.rotation); 
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Instantiate(permanentBullet, transform.position, transform.rotation); 
+        //}
+
+        if (Input.GetButtonDown("Jump"))
+        { 
+            Jump();
         }
 
         movementDir = movementDir.normalized;
         Move(movementDir);
     }
 
-    private void Shoot()
+    private void FixedUpdate()
     {
-        //Disparo
-        Instantiate(bullet, transform.position, transform.rotation);
+        
     }
+
+    private void Jump()
+    {
+        //No puede saltar si el piso esta muy lejos
+        bool hitGround = 
+            UnityEngine.Physics.Raycast(raycastOrigin.position, Vector3.down, jumpCheckDistance, groundLayer);
+
+        if (hitGround)
+        {
+            Vector3 direction = Vector3.up; // Lo mismo que escribir new vector3(0,1,0);
+            rb.AddForce(direction * jumpForce, ForceMode.Impulse);
+        }
+        
+    }
+    //private void Shoot()
+    //{
+    //    //Disparo
+    //    Instantiate(bullet, transform.position, transform.rotation);
+    //}
     private void Move(Vector2 movementDir)
     {
         //Vector3 movement = new Vector3(movementDir.x, 0,movementDir.y);
@@ -86,5 +114,11 @@ public class MainCharacter : MonoBehaviour
     public void Heal(float healAmount)
     {
         health += healAmount;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(raycastOrigin.position, raycastOrigin.position + Vector3.down * jumpCheckDistance);
     }
 }
