@@ -490,7 +490,7 @@ InputManager:
     descriptiveName: Boton de disparo
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: space
+    positiveButton: g
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000

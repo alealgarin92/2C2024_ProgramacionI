@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &12240930586171380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722666757874679908}
+  m_Layer: 6
+  m_Name: Feet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1722666757874679908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12240930586171380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.686, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6647547206378692706}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1699066163799677026
 GameObject:
   m_ObjectHideFlags: 0
@@ -35,6 +66,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3636778630036288563}
+  - {fileID: 1722666757874679908}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8226768234168706416
@@ -103,9 +135,16 @@ MonoBehaviour:
   bullet: {fileID: 7740530637296252819, guid: b2d302b14beee0e4fa5afe0d8d70343b, type: 3}
   shootingCooldownBase: 0.5
   permanentBullet: {fileID: 0}
+  raycastOrigin: {fileID: 1722666757874679908}
   maxHealth: 0
   rb: {fileID: 3934408658851741223}
   health: 0
+  jumpForce: 5
+  jumpCheckDistance: 0.4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  startingRotation: {x: 0, y: 0, z: 0}
 --- !u!136 &1245609912257795549
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -154,7 +193,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &5317175792929540300
 GameObject:

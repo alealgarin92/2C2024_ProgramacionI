@@ -17,6 +17,13 @@ public class MainCharacter : MonoBehaviour
     [SerializeField] private float jumpCheckDistance;
     [SerializeField] private LayerMask groundLayer;
 
+    [SerializeField] private Vector3 startingRotation;
+
+    [SerializeField] private Animator mouseAnimator;
+    
+
+    private EnemyBehaviour targetEnemy;
+
     private float shootingCooldown;
 
     private void Awake()
@@ -33,6 +40,8 @@ public class MainCharacter : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         Vector2 movementDir = new Vector2(horizontal, vertical);
+
+        
 
         //if (Input.GetKey(KeyCode.W))
         //{
@@ -57,7 +66,7 @@ public class MainCharacter : MonoBehaviour
         if (Input.GetButton("Shoot") && shootingCooldown <= 0) 
         {
             shootingCooldown = shootingCooldownBase;
-            //Shoot();
+            Shoot();
         }
 
         //if (Input.GetKeyDown(KeyCode.Space))
@@ -92,11 +101,13 @@ public class MainCharacter : MonoBehaviour
         }
         
     }
-    //private void Shoot()
-    //{
-    //    //Disparo
-    //    Instantiate(bullet, transform.position, transform.rotation);
-    //}
+    private void Shoot()
+    {
+        //Disparo
+        Bullet instantiatedBullet = Instantiate(bullet, transform.position, transform.rotation);
+        var direction = (targetEnemy.transform.position - transform.position).normalized;
+        instantiatedBullet.transform.forward = direction;
+    }
     private void Move(Vector2 movementDir)
     {
         //Vector3 movement = new Vector3(movementDir.x, 0,movementDir.y);
@@ -109,6 +120,16 @@ public class MainCharacter : MonoBehaviour
         
 
         transform.position += direction * movementSpeed * Time.deltaTime;
+    }
+
+    private void StartWalking()
+    {
+        mouseAnimator.SetBool("isWalking", true);
+    }
+
+    private void Idle()
+    {
+        mouseAnimator.SetBool("isWalking", false);
     }
 
     public void Heal(float healAmount)

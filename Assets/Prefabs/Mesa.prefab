@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1144301364756784639}
   - component: {fileID: 2447026842257320584}
   - component: {fileID: 4391648203352597497}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pata (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 6329747290001424620}
   - component: {fileID: 487560114740556135}
   - component: {fileID: 4377691798752303531}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pata (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 2023952111773461956}
   - component: {fileID: 8962349149019225902}
   - component: {fileID: 3225634346151485320}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pata
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 1435546189881041933}
   - component: {fileID: 7964370081662846102}
   - component: {fileID: 5132398334255173026}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mesa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +434,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7606103900370329771}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -460,12 +460,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7606103900370329771}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f1fe895175ee8b45a7019281b54ef8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pusherForce: 10
+  pusherForce: 5
   pushDirection: {x: 0, y: 1, z: 0}
   initialTemp: 3
   rb: {fileID: 7964370081662846102}
@@ -482,7 +482,7 @@ GameObject:
   - component: {fileID: 4234105613532944979}
   - component: {fileID: 6246089306366528309}
   - component: {fileID: 3152508093721345678}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pata (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
