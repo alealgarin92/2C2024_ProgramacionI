@@ -20,7 +20,10 @@ public class MainCharacter : MonoBehaviour
     [SerializeField] private Vector3 startingRotation;
 
     [SerializeField] private Animator mouseAnimator;
-    
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip audioClip;
+
 
     private EnemyBehaviour targetEnemy;
 
@@ -98,6 +101,7 @@ public class MainCharacter : MonoBehaviour
         {
             Vector3 direction = Vector3.up; // Lo mismo que escribir new vector3(0,1,0);
             rb.AddForce(direction * jumpForce, ForceMode.Impulse);
+            PlayJumpSound();
         }
         
     }
@@ -105,8 +109,12 @@ public class MainCharacter : MonoBehaviour
     {
         //Disparo
         Bullet instantiatedBullet = Instantiate(bullet, transform.position, transform.rotation);
-        var direction = (targetEnemy.transform.position - transform.position).normalized;
-        instantiatedBullet.transform.forward = direction;
+        if (targetEnemy != null)
+        {
+            Vector3 direction = (targetEnemy.transform.position - transform.position).normalized;
+            instantiatedBullet.transform.forward = direction;
+        }
+        PlayShootSound();
     }
     private void Move(Vector2 movementDir)
     {
@@ -141,5 +149,15 @@ public class MainCharacter : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(raycastOrigin.position, raycastOrigin.position + Vector3.down * jumpCheckDistance);
+    }
+
+    private void PlayJumpSound()
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
+
+    private void PlayShootSound()
+    {
+        audioSource.Play();
     }
 }
