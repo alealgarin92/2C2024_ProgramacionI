@@ -110,7 +110,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         transform.position += diff * (Time.deltaTime * movementSpeed);
     }
-
+     
     private void RandomMovement()
     {
 
