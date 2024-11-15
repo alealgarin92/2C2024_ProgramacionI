@@ -136,11 +136,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c6e947c0c6bd6546b469d9227bee516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingtState: 5
+  startingtState: 2
   player: {fileID: 0}
   movementSpeed: 2
   pursuitThreshold: 3
-  rotationSpeed: 0
+  rotationSpeed: 3
 --- !u!54 &2419971630497251574
 Rigidbody:
   m_ObjectHideFlags: 0
