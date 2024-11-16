@@ -32,11 +32,15 @@ public class MainCharacter : MonoBehaviour
 
     private float shootingCooldown;
 
-    
+    private Camera camera;
+    Vector3 camForward, camRight, moveDir;
+
+
     private void Awake()
     {
         shootingCooldown = shootingCooldownBase;
         health = maxHealth;
+        camera = Camera.main;
 
         //initializer.OnInitializeComplete += OnInitalizeCompleteHandler;
         //initializer.OnInitializeCompleteUnity.AddListener(OnInitalizeCompleteHandler);
@@ -55,9 +59,28 @@ public class MainCharacter : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector2 movementDir = new Vector2(horizontal, vertical);
+        // Obtener la dirección forward y right de la cámara
+        Vector3 cameraForward = camera.transform.forward;
+        Vector3 cameraRight = camera.transform.right;
 
+        // Asegurarse de que las direcciones estén en el plano horizontal
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
 
+        // Crear el vector de movimiento basado en la entrada del jugador y la orientación de la cámara
+        Vector3 movementDir = (cameraRight * horizontal + cameraForward * vertical).normalized;
+
+        // Rotar al jugador de forma suave
+        if (movementDir != Vector3.zero) // Asegurarse de que hay movimiento
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movementDir); // Rotación objetivo
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10);
+        }
+
+        // Mover el personaje
+        Move(movementDir);
 
         //if (Input.GetKey(KeyCode.W))
         //{
@@ -96,8 +119,10 @@ public class MainCharacter : MonoBehaviour
         }
 
         movementDir = movementDir.normalized;
-        Move(movementDir);
+        Move(moveDir);
     }
+
+    
 
     public void OnInitalizeCompleteHandler()
     {
@@ -139,18 +164,9 @@ public class MainCharacter : MonoBehaviour
         }
         PlayShootSound();
     }
-    private void Move(Vector2 movementDir)
+    void Move(Vector3 direction)
     {
-        //Vector3 movement = new Vector3(movementDir.x, 0,movementDir.y);
-        //Agarro el vector derecha del jugador y lo multiplico por x
-        Vector3 right = transform.right * movementDir.x;
-        //Agarro el vector adelante del jugador y lo multiplico por y
-        Vector3 forward = transform.forward * movementDir.y;
-        //SUmo ambos vectores
-        Vector3 direction = right + forward;
-
-
-        transform.position += direction * movementSpeed * Time.deltaTime;
+        transform.Translate(direction * movementSpeed * Time.deltaTime, Space.World);
     }
 
     private void StartWalking()

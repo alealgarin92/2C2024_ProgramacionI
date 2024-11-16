@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6356943581531075764}
   - component: {fileID: 3618003168118801684}
   - component: {fileID: 3020521573860892146}
-  - component: {fileID: 2419971630497251574}
+  - component: {fileID: 5449985295348232669}
   m_Layer: 7
   m_Name: BaseEnemy
   m_TagString: Enemy
@@ -139,9 +139,9 @@ MonoBehaviour:
   startingtState: 2
   player: {fileID: 0}
   movementSpeed: 2
-  pursuitThreshold: 3
-  rotationSpeed: 3
---- !u!54 &2419971630497251574
+  pursuitThreshold: 5
+  rotationSpeed: 2
+--- !u!54 &5449985295348232669
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,7 +149,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3533308483220545624}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
