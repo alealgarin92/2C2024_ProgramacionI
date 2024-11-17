@@ -54,33 +54,9 @@ public class MainCharacter : MonoBehaviour
             AddPoints();
         }
 
-        //Mover utilizando WASD
+        
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        // Obtener la dirección forward y right de la cámara
-        Vector3 cameraForward = camera.transform.forward;
-        Vector3 cameraRight = camera.transform.right;
-
-        // Asegurarse de que las direcciones estén en el plano horizontal
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        cameraForward.Normalize();
-        cameraRight.Normalize();
-
-        // Crear el vector de movimiento basado en la entrada del jugador y la orientación de la cámara
-        Vector3 movementDir = (cameraRight * horizontal + cameraForward * vertical).normalized;
-
-        // Rotar al jugador de forma suave
-        if (movementDir != Vector3.zero) // Asegurarse de que hay movimiento
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(movementDir); // Rotación objetivo
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10);
-        }
-
-        // Mover el personaje
-        Move(movementDir);
+        
 
         //if (Input.GetKey(KeyCode.W))
         //{
@@ -118,8 +94,7 @@ public class MainCharacter : MonoBehaviour
             Jump();
         }
 
-        movementDir = movementDir.normalized;
-        Move(moveDir);
+        
     }
 
     
@@ -136,7 +111,46 @@ public class MainCharacter : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //Mover utilizando WASD
 
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        // Obtener la dirección forward y right de la cámara
+        Vector3 cameraForward = camera.transform.forward;
+        Vector3 cameraRight = camera.transform.right;
+
+        // Asegurarse de que las direcciones estén en el plano horizontal
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+
+        
+        // Crear el vector de movimiento basado en la entrada del jugador y la orientación de la cámara
+        Vector3 movementDir = (cameraRight * horizontal + cameraForward * vertical).normalized;
+
+        // Rotar al jugador de forma suave
+        if (movementDir != Vector3.zero) // Asegurarse de que hay movimiento
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movementDir); // Rotación objetivo
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10);
+        }
+
+        movementDir = movementDir.normalized;
+
+        // Mover el personaje
+        Move(movementDir);
+
+        if (horizontal != 0f || vertical != 0f)
+        {
+            mouseAnimator.SetBool("isWalking", true);
+        }
+        else
+        {
+            mouseAnimator.SetBool("isWalking", false);
+        }
     }
 
     private void Jump()
