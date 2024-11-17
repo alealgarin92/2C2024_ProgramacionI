@@ -22,7 +22,7 @@ public class MainCharacter : MonoBehaviour
 
     [SerializeField] private Vector3 startingRotation;
 
-    [SerializeField] private Animator mouseAnimator;
+    [SerializeField] private Animator oskar;
 
     [SerializeField] private AudioSource pasos;
     //[SerializeField] private Initializer initializer;
@@ -35,15 +35,15 @@ public class MainCharacter : MonoBehaviour
     private float shootingCooldown;
 
     private new Camera camera;
-    Vector3 camForward, camRight, moveDir;
     private Vector3 movementDir;
-
+    private Vector3 move = Vector3.zero;
 
     private void Start()
     {
         shootingCooldown = shootingCooldownBase;
         health = maxHealth;
         camera = Camera.main;
+        Cursor.lockState = CursorLockMode.Locked;
 
         //initializer.OnInitializeComplete += OnInitalizeCompleteHandler;
         //initializer.OnInitializeCompleteUnity.AddListener(OnInitalizeCompleteHandler);
@@ -64,33 +64,52 @@ public class MainCharacter : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            AddPoints();
-        }
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-        
+        Vector2 direccion = new Vector2(horizontal, vertical);
 
-        // Obtener la dirección forward y right de la cámara
-        Vector3 cameraForward = camera.transform.forward;
-        Vector3 cameraRight = camera.transform.right;
+        // Calculate camera relative directions to move:
+        Vector3 camFwd = Vector3.Scale(camera.transform.forward, new Vector3(1, 1, 1)).normalized;
+        Vector3 camFlatFwd = Vector3.Scale(camera.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 flatRight = new Vector3(camera.transform.right.x, 0, camera.transform.right.z);
 
-        // Asegurarse de que las direcciones estén en el plano horizontal
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        cameraForward.Normalize();
-        cameraRight.Normalize();
+        Vector3 m_CharForward = Vector3.Scale(camFlatFwd, new Vector3(1, 0, 1)).normalized;
+        Vector3 m_CharRight = Vector3.Scale(flatRight, new Vector3(1, 0, 1)).normalized;
 
-        // Crear el vector de movimiento basado en la entrada del jugador y la orientación de la cámara
-        // Crear dirección de movimiento
-        movementDir = (cameraRight * horizontal + cameraForward * vertical).normalized;
+        // Move the player (movement will be slightly different depending on the camera type)
+        float w_speed = 0;
 
-        // Rotar al jugador de forma suave
-        if (movementDir != Vector3.zero) // Asegurarse de que hay movimiento
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(movementDir); // Rotación objetivo
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-        }
+        w_speed = movementSpeed;
+        move = (vertical * m_CharForward + horizontal * m_CharRight).normalized * w_speed;
+        rb.transform.position += move * Time.deltaTime;
+
+        // Rotate body
+        rb.transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(rb.transform.forward, move * Time.fixedDeltaTime, rotationSpeed, 0.0f));
+        // Draws a ray to show the direction the player is aiming at
+        //Debug.DrawLine(transform.position, transform.position + camFwd * 5f, Color.red);
+
+        //// Obtener la dirección forward y right de la cámara
+        //Vector3 cameraForward = camera.transform.forward;
+        //Vector3 cameraRight = camera.transform.right;
+
+        //// Asegurarse de que las direcciones estén en el plano horizontal
+        //cameraForward.y = 0f;
+        //cameraRight.y = 0f;
+        //cameraForward.Normalize();
+        //cameraRight.Normalize();
+
+        //// Crear el vector de movimiento basado en la entrada del jugador y la orientación de la cámara
+        //// Crear dirección de movimiento
+        //movementDir = (cameraRight * horizontal + cameraForward * vertical).normalized;
+
+        //// Rotar al jugador de forma suave
+        //if (movementDir != Vector3.zero) // Asegurarse de que hay movimiento
+        //{
+        //    Quaternion targetRotation = Quaternion.LookRotation(movementDir); // Rotación objetivo
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        //}
+
 
         //Si el jugador presiona Space Y el cooldown ya se termino, dispara
         shootingCooldown -= Time.deltaTime;
@@ -100,12 +119,6 @@ public class MainCharacter : MonoBehaviour
             Shoot();
         }
 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    Instantiate(permanentBullet, transform.position, transform.rotation); 
-        //}
-        
-
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
@@ -113,22 +126,32 @@ public class MainCharacter : MonoBehaviour
 
         }
 
-
         if (direccion.magnitude <= 0)
         {
-            mouseAnimator.SetFloat("movements", 0, 0.1f, Time.deltaTime);
+            oskar.SetFloat("movements", 0, 0.1f, Time.deltaTime);
         }
         else if (direccion.magnitude >= 0.1f && Input.GetKey(KeyCode.LeftShift))
         {
-            mouseAnimator.SetFloat("movements", 1, 0.1f, Time.deltaTime);
+            oskar.SetFloat("movements", 1, 0.1f, Time.deltaTime);
             movementSpeed = 4;
             
         }
         else 
         {
-            mouseAnimator.SetFloat("movements", 0.5f, 0.1f, Time.deltaTime);
+            oskar.SetFloat("movements", 0.5f, 0.1f, Time.deltaTime);
             movementSpeed = 2;   
         }
+
+        if(Input.GetKey(KeyCode.C))
+        {
+            oskar.SetFloat("crouch", 0, 0.1f, Time.deltaTime);
+
+        }
+        //else if (direccion.magnitude >= 0.1f && Input.GetKey(KeyCode.C))
+        //{
+        //    oskar.SetFloat("crouch", 1f, 0.1f, Time.deltaTime);
+        //    movementSpeed = 2;
+        //}
 
         if (Input.GetButtonDown("Horizontal"))
         {
@@ -156,9 +179,13 @@ public class MainCharacter : MonoBehaviour
                 pasos.Pause();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            AddPoints();
+        }
     }
 
- 
     public void OnInitalizeCompleteHandler()
     {
         Debug.Log("Initialized has completed");
@@ -167,15 +194,6 @@ public class MainCharacter : MonoBehaviour
     private void AddPoints()
     {
         GameManager.instance.AddPoints(pointsPerClick);
-    }
-
-    //private void FixedUpdate()
-    //{
-    //    // Movimiento físico
-    //    Vector3 movementDir = (camRight * Input.GetAxis("Horizontal") + camForward * Input.GetAxis("Vertical")).normalized;
-    //    rb.MovePosition(rb.position + movementDir * movementSpeed * Time.fixedDeltaTime);
-    //}
-
     }
 
     private void Jump()
@@ -213,7 +231,7 @@ public class MainCharacter : MonoBehaviour
     //Se realiza animacion de salto
     private void StartJump()
     {
-        mouseAnimator.SetTrigger("Jump");
+        oskar.SetTrigger("Jump");
     }
 
     public void Heal(float healAmount)
@@ -263,6 +281,15 @@ public class MainCharacter : MonoBehaviour
     //{
     //    movementDir.x += 1;
     //}
-
+    //private void FixedUpdate()
+    //{
+    //    // Movimiento físico
+    //    Vector3 movementDir = (camRight * Input.GetAxis("Horizontal") + camForward * Input.GetAxis("Vertical")).normalized;
+    //    rb.MovePosition(rb.position + movementDir * movementSpeed * Time.fixedDeltaTime);
+    //}
+    //if (Input.GetKeyDown(KeyCode.Space))
+    //{
+    //    Instantiate(permanentBullet, transform.position, transform.rotation); 
+    //}
 
 }
