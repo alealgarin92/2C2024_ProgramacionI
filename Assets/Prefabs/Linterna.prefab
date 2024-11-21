@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3484811354877359052}
-  - component: {fileID: 5009840109145176884}
   m_Layer: 0
   m_Name: Linterna
   m_TagString: Untagged
@@ -35,25 +34,6 @@ Transform:
   - {fileID: 3003435915065950339}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5009840109145176884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7808588154696168007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00ab9193b7420344b9cb578be811cb5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyCheckDistance: 0
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  damagePerTick: 0
-  enemy: {fileID: 0}
-  raycastOrigin: {fileID: 0}
 --- !u!1 &8192758999053354419
 GameObject:
   m_ObjectHideFlags: 0

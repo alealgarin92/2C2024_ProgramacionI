@@ -6,15 +6,15 @@ public class MusicController : MonoBehaviour
 {
     [SerializeField] private AudioSource mainAudio;
 
-    [SerializeField] private AudioClip level1, level2;
+    [SerializeField] private AudioClip level1, level2, level3;
+
 
     public void ChangeMusic(AudioClip newClip)
     {
-        //Detener audio
         mainAudio.Stop();
-        //Cambiar la musica
+
         mainAudio.clip = newClip;
-        //Reproducir la nueva musica
+
         mainAudio.Play();
     }
 
@@ -27,5 +27,19 @@ public class MusicController : MonoBehaviour
     {
         ChangeMusic(level2);
     }
-    
-}
+    public void PlayLevel3Music()
+    {
+        ChangeMusic(level3);
+    }
+
+    //Pausar musica
+    public void PauseLevelMusic()
+    {
+        mainAudio.Pause();
+    }
+    public void ResumeLevelMusic()
+    {
+        mainAudio.UnPause();
+    }
+
+}  
