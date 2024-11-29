@@ -12,6 +12,9 @@ public class GameManagerTest : MonoBehaviour
     [SerializeField] private float health;
     [SerializeField] private float currentBatery;
    
+
+    //Quiero un evento que me indique cuando el jugador pierde vida
+
  
     public float GetCurrentBatery()
     {

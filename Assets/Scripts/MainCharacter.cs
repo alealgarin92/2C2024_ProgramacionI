@@ -1,50 +1,86 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+using static Unity.VisualScripting.Member;
 
 public class MainCharacter : MonoBehaviour
 {
-    [SerializeField] private int pointsPerClick = 10;
-    [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed = 10f; // Velocidad de rotación
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float runSpeed;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float CrouchingSpeed;
+    [SerializeField] private Vector2 mouseSensitivity;
     [SerializeField] private Transform raycastOrigin;
+    [SerializeField] private Transform raycastLanternOrigin;
 
     [SerializeField] private float maxHealth;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float health;
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpCheckDistance;
+    [SerializeField] private float enemyCheckDistance;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask enemyLayer;
+
+    [SerializeField] private float damagePerTick;
 
     [SerializeField] private Animator oskar;
 
-    [SerializeField] private AudioSource pasos;
-    //[SerializeField] private Initializer initializer;
     private bool Hactivo;
     private bool Vactivo;
 
-    private EnemyBehaviour targetEnemy;
 
-    private float shootingCooldown;
+    //Patalla de derrota, victoria y pausa
+    [SerializeField] private GameObject pantallaMenuDerrota;
+
+    //Barra de vida
+    [SerializeField] private Image barraDeEstres;
+
+    private bool linternaEncendida = false; // Estado de la linterna (encendida/apagada)
+
+    private EnemyBehaviour targetEnemy;
+    private Enemy enemy;
+
+    public float saldoSube;
 
     private new Camera camera;
+    private float shootingCooldown;
+
+    //private MenuInicial menu;
+
+    private GameObject permanetLantern;
+
+    public int cantSube = 0;
+    public int cantLlaves = 0;
+
     private Vector3 movementDir;
     private Vector3 move = Vector3.zero;
     private bool isCrouching = false;
     private bool isAiming = false;
 
-    [SerializeField] private Vector2 mouseSensitivity;
-    
+    //Prueba de vida con luz y sombra
+    public float lifeChangeRate = 5f; // Cuánto aumenta o disminuye la vida por segundo
+    private Light currentLight; // Referencia a la luz que afecta al personaje
+    private bool isInLight = false; // Verifica si está en la luz o en la sombra
+
     private void Start()
     {
+        // Inicializa la salud al máximo al inicio del juego
         health = maxHealth;
-        camera = Camera.main;
-        Cursor.lockState = CursorLockMode.Locked;
 
-        //initializer.OnInitializeComplete += OnInitalizeCompleteHandler;
-        //initializer.OnInitializeCompleteUnity.AddListener(OnInitalizeCompleteHandler);
+        //Linea que nos ayuda a bloquear el puntero una vez presionado play
+        Cursor.lockState = CursorLockMode.Locked;
+        camera = Camera.main;
+        permanetLantern = GameObject.FindGameObjectWithTag("Linterna");
+
+        // Asegúrate de que todo esté limpio al comenzar la escena
+        pantallaMenuDerrota.SetActive(false);
+        Time.timeScale = 1f;
 
         {
             if (rb == null)
@@ -57,14 +93,18 @@ public class MainCharacter : MonoBehaviour
                 camera = Camera.main; // Obtiene la cámara principal si no está asignada
             }
         }
+        rb.freezeRotation = true; // Desactiva rotaciones automáticas
     }
+
 
     private void Update()
     {
+        //Mover utilizando WASD
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector2 direccion = new Vector2(horizontal, vertical);
+        Vector2 direction = new Vector2(horizontal, vertical);
 
         // Calcular direcciones relativas a la cámara
         Vector3 camFlatFwd = Vector3.Scale(camera.transform.forward, new Vector3(1, 0, 1)).normalized;
@@ -112,63 +152,103 @@ public class MainCharacter : MonoBehaviour
             {
                 isCrouching = !isCrouching; // Cambiar estado de agachado
                 oskar.SetBool("isCrouching", isCrouching); // Activar Blend Tree correspondiente
-                movementSpeed = isCrouching ? 1 : 2; // Ajustar velocidad
+                movementSpeed = isCrouching ? CrouchingSpeed : walkSpeed; // Ajustar velocidad
             }
 
             // Determinar el estado de movimiento
-            if (direccion.magnitude <= 0) // Quieto
+            if (direction.magnitude <= 0) // Quieto
             {
                 oskar.SetFloat("movements", 0, 0.1f, Time.deltaTime); // Estado Idle
             }
-            else if (direccion.magnitude > 0 && !isCrouching && Input.GetKey(KeyCode.LeftShift)) // Correr
+            else if (direction.magnitude > 0 && !isCrouching && Input.GetKey(KeyCode.LeftShift)) // Correr
             {
                 oskar.SetFloat("movements", 1, 0.1f, Time.deltaTime); // Estado Correr
-                movementSpeed = 4;
+                movementSpeed = runSpeed;
             }
-            else if (direccion.magnitude > 0 && isCrouching) // Caminar Agachado
+            else if (direction.magnitude > 0 && isCrouching) // Caminar Agachado
             {
                 oskar.SetFloat("movements", 0.25f, 0.1f, Time.deltaTime); // Estado Caminar Agachado
             }
-            else if (direccion.magnitude > 0) // Caminar Normal
+            else if (direction.magnitude > 0) // Caminar Normal
             {
                 oskar.SetFloat("movements", 0.5f, 0.1f, Time.deltaTime); // Estado Caminar Normal
-                movementSpeed = 2;
+                movementSpeed = walkSpeed;
             }
 
             // Aplicar movimiento
             rb.MovePosition(rb.position + move * Time.deltaTime);
-        
 
-        // Rotar cuerpo hacia la dirección de movimiento
-        if (move != Vector3.zero)
+
+            // Rotar cuerpo hacia la dirección de movimiento
+            if (move != Vector3.zero)
             {
                 rb.transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(rb.transform.forward, move, rotationSpeed * Time.deltaTime, 0.0f));
-            }  
+            }
         }
 
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
             StartJump();
+        }
+
+        FlashLightEnemy();
+
+        barraDeEstres.fillAmount = health / maxHealth;
+
+        //PRUEBA DE LUCES Y SOMBRAS
+
+        // Cambia la salud dependiendo de si está en la luz o en la sombra
+        if (isInLight)
+        {
+            IncreaseHealth(lifeChangeRate * Time.deltaTime);
+        }
+        else
+        {
+            DecreaseHealth(lifeChangeRate * Time.deltaTime);
+        }
+
+        // Limita la salud entre 0 y el máximo
+        health = Mathf.Clamp(health, 0, maxHealth);
+
+        // Si la salud llega a 0, puedes manejar la "muerte" del personaje aquí
+        if (health <= 0)
+        {
+            PantallaDerrota();
+            Debug.Log("El personaje ha muerto.");
 
         }
 
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    AddPoints();
-        //}
-
     }
 
-    public void OnInitalizeCompleteHandler()
+    void IncreaseHealth(float amount)
     {
-        Debug.Log("Initialized has completed");
+        health += amount;
     }
 
-    private void AddPoints()
+    void DecreaseHealth(float amount)
     {
-        GameManager.instance.AddPoints(pointsPerClick);
+        health -= amount;
     }
+    // Detecta si el personaje entra en una zona de luz
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Light"))
+        {
+            isInLight = true;
+        }
+    }
+
+    // Detecta si el personaje sale de una zona de luz
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Light"))
+        {
+            isInLight = false;
+        }
+    }
+
+    //-------------------------------------
 
     private void LookAtMouseDirection()
     {
@@ -187,6 +267,8 @@ public class MainCharacter : MonoBehaviour
             rb.transform.forward = directionToLook;
         }
     }
+
+
     private void Jump()
     {
         //No puede saltar si el piso esta muy lejos
@@ -197,117 +279,93 @@ public class MainCharacter : MonoBehaviour
         {
             Vector3 direction = Vector3.up; // Lo mismo que escribir new vector3(0,1,0);
             rb.AddForce(direction * jumpForce, ForceMode.Impulse);
-            //PlayJumpSound();
         }
-
     }
 
-    private void FixedUpdate()
+
+    private void FlashLightEnemy()
     {
-        // Mover al personaje usando el Rigidbody
-        Vector3 newPosition = rb.position + movementDir * movementSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(newPosition);
+        // Realiza el Raycast cada frame mientras la linterna esta encendida
+        if (Physics.Raycast(raycastLanternOrigin.position, raycastLanternOrigin.forward, out RaycastHit hit, enemyCheckDistance, enemyLayer))
+        {
+            // Checkea si el objeto con el que choca el rayo tiene el componente Enemy
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                // Resta vida al enemigo 
+                enemy.TakeDamage(damagePerTick * Time.deltaTime);
+            }
+        }
     }
+
 
     //Se realiza animacion de salto
+
+
     private void StartJump()
     {
         oskar.SetTrigger("Jump");
     }
 
+
     public void Heal(float healAmount)
     {
-        health += healAmount;
+        if (health < 100)
+        {
+            health += healAmount;
+        }
     }
 
+    //Funcion para visualizar el raycast de salto y el de deteccion de enmigos
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(raycastOrigin.position, raycastOrigin.position + Vector3.down * jumpCheckDistance);
+
+        Gizmos.DrawLine(raycastLanternOrigin.position, raycastLanternOrigin.position + transform.forward * enemyCheckDistance);
     }
 
-    //private void StartWalking()
-    //{
-    //    mouseAnimator.SetBool("isWalking", true);
-    //}
 
-    //private void Idle()
-    //{
-    //    mouseAnimator.SetBool("isWalking", false);
-    //}
+    public void CargaSube(float dinero)
+    {
+        if (saldoSube < 1000)
+        {
+            saldoSube += dinero;
+        }
+    }
+    public void ApoyaSube(float restaSaldo)
+    {
+        if (saldoSube > 500)
+        {
+            saldoSube -= restaSaldo;
 
-    //private void PlayJumpSound()
-    //{
-    //    jumpSound.PlayOneShot(audioClip);
-    //}
+        }
+    }
 
-    //private void PlayShootSound()
-    //{
-    //    shootSound.Play();
-    //}
+    public void Salir()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            //Cargar menu principal
+        }
+    }
 
-    //if (Input.GetKey(KeyCode.W))
-    //{
-    //    movementDir.y += 1;
-    //}
-    //if (Input.GetKey(KeyCode.A))
-    //{
-    //    movementDir.x -= 1;
-    //}
-    //if (Input.GetKey(KeyCode.S))
-    //{
-    //    movementDir.y -= 1;
-    //}
-    //if (Input.GetKey(KeyCode.D))
-    //{
-    //    movementDir.x += 1;
-    //}
-    //private void FixedUpdate()
-    //{
-    //    // Movimiento físico
-    //    Vector3 movementDir = (camRight * Input.GetAxis("Horizontal") + camForward * Input.GetAxis("Vertical")).normalized;
-    //    rb.MovePosition(rb.position + movementDir * movementSpeed * Time.fixedDeltaTime);
-    //}
-    //if (Input.GetKeyDown(KeyCode.Space))
-    //{
-    //    Instantiate(permanentBullet, transform.position, transform.rotation); 
-    //}
-    //[SerializeField] private Bullet bullet;
-    //[SerializeField] private float shootingCooldownBase;
-    //[SerializeField] private PermanentBullet permanentBullet;
-    //private void Shoot()
-    //{
-    //    //Disparo
-    //    Bullet instantiatedBullet = Instantiate(bullet, transform.position, transform.rotation);
-    //    if (targetEnemy != null)
-    //    {
-    //        Vector3 direction = (targetEnemy.transform.position - transform.position).normalized;
-    //        instantiatedBullet.transform.forward = direction;
-    //    }
-    //    //PlayShootSound();
-    //}
-    //shootingCooldown = shootingCooldownBase;
-    //[SerializeField] private Vector3 startingRotation;
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        PantallaDerrota();
 
+    }
 
-                //TIMER
+    private void PantallaDerrota()
+    {
+        if (health <= 0)
+        {
+            pantallaMenuDerrota.SetActive(true);
+            Time.timeScale = 0;
+        }
+    }
 
-    //[SerializeField] private float initialTemp;
-
-    //private float currentTime;
-
-    //private void Awake()
-    //{
-    //    currentTime = initialTemp;
-    //}
-
-    //private void LateUpdate()
-    //{
-    //    currentTime -= Time.deltaTime;
-
-    //    if (currentTime <= 0) ;
-    //    Action();
-    //}
 }
 
 

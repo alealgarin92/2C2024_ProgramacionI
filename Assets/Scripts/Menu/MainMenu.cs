@@ -3,6 +3,7 @@ using UnityEditor;
 #endif
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
@@ -21,6 +22,7 @@ public class MainMenu : MonoBehaviour
     private void OnPlayButtonPressed()
     {
         Debug.Log("Play Game");
+        SceneManager.LoadScene(sceneName: "Nivel_1");
     }
 
     private void OnOptionsButtonPressed()
