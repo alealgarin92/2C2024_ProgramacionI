@@ -190,8 +190,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5950264307185431218}
-  - component: {fileID: 9087388594585192028}
-  - component: {fileID: 5970820310725089595}
   m_Layer: 0
   m_Name: TriggerLinterna
   m_TagString: Untagged
@@ -214,40 +212,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6294001930193914745}
   m_LocalEulerAnglesHint: {x: 0.766, y: -119.994, z: -0.233}
---- !u!65 &9087388594585192028
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5090956592078713651}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5970820310725089595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5090956592078713651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a82c82e1bd2891b41b11ddefeb428495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  linterna: {fileID: 972227703446385170}
 --- !u!1 &8239998939841201566
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6294001930193914745}
-  - component: {fileID: 972227703446385170}
+  - component: {fileID: 7086698768520955125}
   m_Layer: 0
   m_Name: LinternaSinLuz
   m_TagString: Untagged
@@ -336,7 +300,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9213341703495107656}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.86602455, z: -0, w: 0.5000018}
+  m_LocalRotation: {x: 0, y: 0.86602545, z: 0, w: 0.49999994}
   m_LocalPosition: {x: -1.1782036, y: 263.78625, z: -58.360184}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -345,7 +309,7 @@ Transform:
   - {fileID: 5950264307185431218}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 120, z: 0}
---- !u!114 &972227703446385170
+--- !u!114 &7086698768520955125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -354,6 +318,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 9213341703495107656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00ab9193b7420344b9cb578be811cb5f, type: 3}
+  m_Script: {fileID: 11500000, guid: dae7212dd13430541be6739c00002b5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  linternaPlayer: {fileID: 0}
+  sonidoLinterna: {fileID: 0}
+  pickUpRadius: 0.99
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  visualPilas: {fileID: 0}
+  pressF: {fileID: 0}

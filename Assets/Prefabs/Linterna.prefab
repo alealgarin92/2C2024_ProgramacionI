@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3484811354877359052}
+  - component: {fileID: 1468667177496167377}
   m_Layer: 0
   m_Name: Linterna
   m_TagString: Untagged
@@ -34,6 +35,26 @@ Transform:
   - {fileID: 3003435915065950339}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1468667177496167377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808588154696168007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae7212dd13430541be6739c00002b5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  linternaPlayer: {fileID: 0}
+  sonidoLinterna: {fileID: 0}
+  pickUpRadius: 0.85
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  visualPilas: {fileID: 0}
 --- !u!1 &8192758999053354419
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,7 +95,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8192758999053354419}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
@@ -192,15 +213,15 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8758292625585879357}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 0.9833942, g: 0.98490566, b: 0.778633, a: 1}
-  m_Intensity: 13.28
-  m_Range: 3.84
-  m_SpotAngle: 34.801975
-  m_InnerSpotAngle: 26.604055
+  m_Color: {r: 0.8003511, g: 0.8037735, b: 0.75676036, a: 1}
+  m_Intensity: 12.67
+  m_Range: 9.8
+  m_SpotAngle: 97.016426
+  m_InnerSpotAngle: 56.822536
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2

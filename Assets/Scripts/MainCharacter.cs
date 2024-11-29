@@ -153,10 +153,10 @@ public class MainCharacter : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            AddPoints();
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    AddPoints();
+        //}
 
     }
 
