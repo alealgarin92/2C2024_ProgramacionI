@@ -51,9 +51,7 @@ public class MainCharacter : MonoBehaviour
     private new Camera camera;
     private float shootingCooldown;
 
-    //private MenuInicial menu;
-
-    private GameObject permanetLantern;
+    private MenuInicial menu;
 
     public int cantSube = 0;
     public int cantLlaves = 0;
@@ -70,13 +68,13 @@ public class MainCharacter : MonoBehaviour
 
     private void Start()
     {
-        // Inicializa la salud al máximo al inicio del juego
         health = maxHealth;
+        // Inicializa la salud al máximo al inicio del juego
+
 
         //Linea que nos ayuda a bloquear el puntero una vez presionado play
         Cursor.lockState = CursorLockMode.Locked;
         camera = Camera.main;
-        permanetLantern = GameObject.FindGameObjectWithTag("Linterna");
 
         // Asegúrate de que todo esté limpio al comenzar la escena
         pantallaMenuDerrota.SetActive(false);
@@ -293,7 +291,7 @@ public class MainCharacter : MonoBehaviour
             if (enemy != null)
             {
                 // Resta vida al enemigo 
-                enemy.TakeDamage(damagePerTick * Time.deltaTime);
+                enemy.TakeDamage(damagePerTick * Time.fixedDeltaTime);
             }
         }
     }
@@ -367,5 +365,3 @@ public class MainCharacter : MonoBehaviour
     }
 
 }
-
-

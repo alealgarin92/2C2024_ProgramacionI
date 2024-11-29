@@ -43,8 +43,9 @@ GameObject:
   - component: {fileID: 1245609912257795549}
   - component: {fileID: 3934408658851741223}
   - component: {fileID: 2293899654410503911}
-  - component: {fileID: 399762268424431566}
   - component: {fileID: 8602033494621654870}
+  - component: {fileID: 3888121384961217603}
+  - component: {fileID: 7389808943936511931}
   m_Layer: 6
   m_Name: MainCharacter
   m_TagString: Player
@@ -69,6 +70,7 @@ Transform:
   - {fileID: 1722666757874679908}
   - {fileID: 5485845891787001896}
   - {fileID: 3730321770408035946}
+  - {fileID: 7799160976825864045}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1245609912257795549
@@ -133,22 +135,131 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d96fdb674355f42968b88e7ffeca99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsPerClick: 10
-  movementSpeed: 3
   rotationSpeed: 15
+  movementSpeed: 3
+  runSpeed: 4
+  walkSpeed: 2
+  CrouchingSpeed: 2
+  mouseSensitivity: {x: 1, y: 1}
   raycastOrigin: {fileID: 1722666757874679908}
-  maxHealth: 0
+  raycastLanternOrigin: {fileID: 7799160976825864045}
+  maxHealth: 100
   rb: {fileID: 3934408658851741223}
   health: 0.05
   jumpForce: 4
   jumpCheckDistance: 0.4
+  enemyCheckDistance: 5.23
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  damagePerTick: 10
   oskar: {fileID: 5188701842495109153}
-  pasos: {fileID: 8602033494621654870}
-  mouseSensitivity: {x: 1, y: 1}
---- !u!81 &399762268424431566
+  pantallaMenuDerrota: {fileID: 0}
+  barraDeEstres: {fileID: 0}
+  saldoSube: 0
+  cantSube: 0
+  cantLlaves: 0
+  lifeChangeRate: 0
+--- !u!82 &8602033494621654870
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1699066163799677026}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 60c1832b3a510a84db13ef0192eff8af, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.237
+  m_Pitch: 0.9
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!81 &3888121384961217603
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -156,7 +267,7 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699066163799677026}
   m_Enabled: 1
---- !u!82 &8602033494621654870
+--- !u!82 &7389808943936511931
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,6 +512,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6647547206378692706}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8913461339653471845
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7799160976825864045}
+  m_Layer: 0
+  m_Name: RycastLantern
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7799160976825864045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8913461339653471845}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.32299995, y: 0.21299994, z: 0.23799992}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6647547206378692706}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &259038978419045798
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -572,7 +714,6 @@ MonoBehaviour:
   spotLight: {fileID: 6628294736579099171}
   pointLight: {fileID: 7866863089891119551}
   linternaEnMano: 0
-  cantBateria: 100
   perdidaBateria: 5.1
   pila: {fileID: 0}
   pila_0: {fileID: 21300000, guid: a79bb0dfadda9b1478cecb7a638e2cfa, type: 3}
