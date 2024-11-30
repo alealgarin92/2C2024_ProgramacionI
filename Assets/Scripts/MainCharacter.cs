@@ -16,18 +16,14 @@ public class MainCharacter : MonoBehaviour
     [SerializeField] private float CrouchingSpeed;
     [SerializeField] private Vector2 mouseSensitivity;
     [SerializeField] private Transform raycastOrigin;
-    [SerializeField] private Transform raycastLanternOrigin;
+    
 
-    [SerializeField] private float maxHealth;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private float health;
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpCheckDistance;
-    [SerializeField] private float enemyCheckDistance;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask enemyLayer;
 
-    [SerializeField] private float damagePerTick;
+    
 
     [SerializeField] private Animator oskar;
 
@@ -40,8 +36,6 @@ public class MainCharacter : MonoBehaviour
 
     //Barra de vida
     [SerializeField] private Image barraDeEstres;
-
-    private bool linternaEncendida = false; // Estado de la linterna (encendida/apagada)
 
     private EnemyBehaviour targetEnemy;
     private Enemy enemy;
@@ -66,9 +60,12 @@ public class MainCharacter : MonoBehaviour
     private Light currentLight; // Referencia a la luz que afecta al personaje
     private bool isInLight = false; // Verifica si está en la luz o en la sombra
 
+    
+    private float maxHealth = 100;
+    private float health;
     private void Start()
     {
-        health = maxHealth;
+        
         // Inicializa la salud al máximo al inicio del juego
 
 
@@ -94,9 +91,10 @@ public class MainCharacter : MonoBehaviour
         rb.freezeRotation = true; // Desactiva rotaciones automáticas
     }
 
-
     private void Update()
     {
+        health = GameManagerTest.instance.GetCurrentHealth();
+        
         //Mover utilizando WASD
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -190,8 +188,6 @@ public class MainCharacter : MonoBehaviour
             StartJump();
         }
 
-        FlashLightEnemy();
-
         barraDeEstres.fillAmount = health / maxHealth;
 
         //PRUEBA DE LUCES Y SOMBRAS
@@ -221,12 +217,12 @@ public class MainCharacter : MonoBehaviour
 
     void IncreaseHealth(float amount)
     {
-        health += amount;
+        GameManagerTest.instance.IncreaseHealth(amount); 
     }
 
     void DecreaseHealth(float amount)
     {
-        health -= amount;
+        GameManagerTest.instance.DecreaseHealth(amount);
     }
     // Detecta si el personaje entra en una zona de luz
     private void OnTriggerEnter(Collider other)
@@ -281,20 +277,7 @@ public class MainCharacter : MonoBehaviour
     }
 
 
-    private void FlashLightEnemy()
-    {
-        // Realiza el Raycast cada frame mientras la linterna esta encendida
-        if (Physics.Raycast(raycastLanternOrigin.position, raycastLanternOrigin.forward, out RaycastHit hit, enemyCheckDistance, enemyLayer))
-        {
-            // Checkea si el objeto con el que choca el rayo tiene el componente Enemy
-            Enemy enemy = hit.collider.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                // Resta vida al enemigo 
-                enemy.TakeDamage(damagePerTick * Time.fixedDeltaTime);
-            }
-        }
-    }
+    
 
 
     //Se realiza animacion de salto
@@ -310,7 +293,7 @@ public class MainCharacter : MonoBehaviour
     {
         if (health < 100)
         {
-            health += healAmount;
+            GameManagerTest.instance.IncreaseHealth(healAmount);
         }
     }
 
@@ -319,8 +302,6 @@ public class MainCharacter : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(raycastOrigin.position, raycastOrigin.position + Vector3.down * jumpCheckDistance);
-
-        Gizmos.DrawLine(raycastLanternOrigin.position, raycastLanternOrigin.position + transform.forward * enemyCheckDistance);
     }
 
 
@@ -350,7 +331,7 @@ public class MainCharacter : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
+        GameManagerTest.instance.DecreaseHealth(damage);
         PantallaDerrota();
 
     }

@@ -7,6 +7,12 @@ public class Linterna : MonoBehaviour
 {
     [SerializeField] private Light spotLight;
     [SerializeField] private Light pointLight;
+    [SerializeField] private Transform raycastLanternOrigin;
+    [SerializeField] private float damagePerTick;
+    [SerializeField] private float enemyCheckDistance;
+    [SerializeField] private LayerMask enemyLayer;
+    private float cantBateria;
+
     public bool linternaEnMano;
     public float perdidaBateria = 0.5f;
 
@@ -22,21 +28,21 @@ public class Linterna : MonoBehaviour
 
     private bool activelight;
 
+   
     private void Update()
     {
-        var manager = GameManagerTest.instance;
 
-        var cantBateria = manager.GetCurrentBatery();
+        cantBateria = GameManagerTest.instance.GetCurrentBatery();
 
         cantBateria = Mathf.Clamp(cantBateria, 0, 100);
         int valorBateria = (int)cantBateria;
         porcentaje.text = valorBateria.ToString() + "%";
         if (Input.GetMouseButtonDown(0) && linternaEnMano == true)
         {
+            
             activelight = !activelight;
             if (activelight == true)
             {
-
                 spotLight.enabled = true;
                 pointLight.enabled = true;
             }
@@ -52,6 +58,7 @@ public class Linterna : MonoBehaviour
         if (activelight == true && cantBateria > 0)
         {
             BateryLoss();
+            FlashLightEnemy();
         }
 
         if (cantBateria == 0)
@@ -97,5 +104,26 @@ public class Linterna : MonoBehaviour
     {
         GameManagerTest.instance.BateryLoss(perdidaBateria);
     }
-  
+
+    private void FlashLightEnemy()
+    {
+        // Realiza el Raycast cada frame mientras la linterna esta encendida
+        if (Physics.Raycast(raycastLanternOrigin.position, raycastLanternOrigin.forward, out RaycastHit hit, enemyCheckDistance, enemyLayer))
+        {
+            // Checkea si el objeto con el que choca el rayo tiene el componente Enemy
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                // Resta vida al enemigo 
+                enemy.TakeDamage(damagePerTick);
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(raycastLanternOrigin.position, raycastLanternOrigin.position + transform.forward * enemyCheckDistance);
+    }
+
 }

@@ -9,7 +9,7 @@ public class GameManagerTest : MonoBehaviour
 {
     public static GameManagerTest instance;
     
-    [SerializeField] private float health;
+    [SerializeField] private float currentHealth;
     [SerializeField] private float currentBatery;
    
 
@@ -26,6 +26,17 @@ public class GameManagerTest : MonoBehaviour
         currentBatery = cantidad;
     }
 
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public void SetCurrentHealth(float cantidad)
+    {
+        currentHealth = cantidad;
+    }
+
+    //Metodos de linterna
     public void BateryLoss(float cantidad)
     {
         currentBatery -= cantidad * Time.deltaTime; ;
@@ -36,6 +47,16 @@ public class GameManagerTest : MonoBehaviour
         currentBatery += cantidad ;
     }
 
+    //Metodos de vida
+    public void IncreaseHealth(float amount)
+    {
+        currentHealth += amount;
+    }
+
+    public void DecreaseHealth(float amount)
+    {
+        currentHealth -= amount;
+    }
     private void Awake()
     {
         //Si el game manager ya existe?? Entonces no tengo razon de ser, me destruyo.
@@ -54,5 +75,6 @@ public class GameManagerTest : MonoBehaviour
     private void Start()
     {
         currentBatery = 100;
+        currentHealth = 100;
     }
 }

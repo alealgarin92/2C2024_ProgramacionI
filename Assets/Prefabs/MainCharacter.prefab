@@ -155,7 +155,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  damagePerTick: 10
+  damagePerTick: 30
   oskar: {fileID: 5188701842495109153}
   pantallaMenuDerrota: {fileID: 0}
   barraDeEstres: {fileID: 0}
@@ -714,7 +714,7 @@ MonoBehaviour:
   spotLight: {fileID: 6628294736579099171}
   pointLight: {fileID: 7866863089891119551}
   linternaEnMano: 0
-  perdidaBateria: 5.1
+  perdidaBateria: 2
   pila: {fileID: 0}
   pila_0: {fileID: 21300000, guid: a79bb0dfadda9b1478cecb7a638e2cfa, type: 3}
   pila_1: {fileID: 21300000, guid: a76671cf1c54c884fa47490c92605826, type: 3}
