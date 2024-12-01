@@ -7,6 +7,11 @@ TagManager:
   - Enemy
   - Door
   - Light
+  - LinternaSinLuz
+  - Batery
+  - LLaves
+  - Sube
+  - Linterna
   layers:
   - Default
   - TransparentFX
@@ -19,7 +24,7 @@ TagManager:
   - Obstacles
   - AllyProjectiles
   - EnemyProjectiles
-  - 
+  - GrabItem
   - 
   - 
   - 

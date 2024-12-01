@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -159,7 +159,7 @@ PrefabInstance:
     - target: {fileID: 4524059629909908619, guid: 62f390b6849932342af4ee117e65e974,
         type: 3}
       propertyPath: pursuitThreshold
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4524059629909908619, guid: 62f390b6849932342af4ee117e65e974,
         type: 3}
@@ -231,7 +231,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6491144499260279168, guid: 62f390b6849932342af4ee117e65e974, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -242,6 +243,45 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1366538564}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &264892447 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7808588154696168007, guid: c30fc07713330614b8e55eca8d9a9606,
+    type: 3}
+  m_PrefabInstance: {fileID: 266510695}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &264892448 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1468667177496167377, guid: c30fc07713330614b8e55eca8d9a9606,
+    type: 3}
+  m_PrefabInstance: {fileID: 266510695}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264892447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae7212dd13430541be6739c00002b5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &264892450
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264892447}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.11, z: 0.57}
+  m_Center: {x: 0, y: 0.004, z: -0.28}
 --- !u!1001 &266510695
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -262,9 +302,19 @@ PrefabInstance:
       objectReference: {fileID: 490846752}
     - target: {fileID: 1468667177496167377, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1468667177496167377, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
       propertyPath: visualPilas
       value: 
       objectReference: {fileID: 478802643}
+    - target: {fileID: 1468667177496167377, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: pickUpRadius
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1468667177496167377, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
       propertyPath: linternaPlayer
@@ -275,10 +325,15 @@ PrefabInstance:
       propertyPath: sonidoLinterna
       value: 
       objectReference: {fileID: 1973920792}
-    - target: {fileID: 2506309540466832008, guid: c30fc07713330614b8e55eca8d9a9606,
+    - target: {fileID: 2803017101849381010, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3257927447385606454, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3484811354877359052, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
@@ -330,55 +385,64 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
+    - target: {fileID: 3554656276198401263, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
-      propertyPath: m_Range
-      value: 9.8
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
+    - target: {fileID: 3735510464414135777, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
-      propertyPath: m_Color.b
-      value: 0.75676036
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
+    - target: {fileID: 4765655721626907984, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
-      propertyPath: m_Color.g
-      value: 0.8037735
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
+    - target: {fileID: 5507474537065262586, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
-      propertyPath: m_Color.r
-      value: 0.8003511
-      objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
-        type: 3}
-      propertyPath: m_Intensity
-      value: 12.67
-      objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
-        type: 3}
-      propertyPath: m_SpotAngle
-      value: 97.016426
-      objectReference: {fileID: 0}
-    - target: {fileID: 6369255792637824901, guid: c30fc07713330614b8e55eca8d9a9606,
-        type: 3}
-      propertyPath: m_InnerSpotAngle
-      value: 56.822536
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7808588154696168007, guid: c30fc07713330614b8e55eca8d9a9606,
         type: 3}
       propertyPath: m_Name
       value: Linterna
       objectReference: {fileID: 0}
+    - target: {fileID: 7808588154696168007, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7808588154696168007, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7808588154696168007, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: m_TagString
+      value: LinternaSinLuz
+      objectReference: {fileID: 0}
+    - target: {fileID: 8192758999053354419, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8758292625585879357, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7808588154696168007, guid: c30fc07713330614b8e55eca8d9a9606,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 264892450}
   m_SourcePrefab: {fileID: 100100000, guid: c30fc07713330614b8e55eca8d9a9606, type: 3}
 --- !u!1001 &460494739
 PrefabInstance:
@@ -852,7 +916,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884287725}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c0ee334ea8c91e4499ca6e354be7bb8, type: 3}
   m_Name: 
@@ -860,12 +924,28 @@ MonoBehaviour:
   rb: {fileID: 881659437}
   linternaPlayer: {fileID: 2109667066}
   sonidoBateria: {fileID: 1973920792}
-  pickUpRadius: 0.8
-  collisionLayer:
-    serializedVersion: 2
-    m_Bits: 64
   carga: 20
-  pressF: {fileID: 490846752}
+--- !u!65 &884287730
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 884287725}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &913493045
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,12 +1191,17 @@ PrefabInstance:
     - target: {fileID: 19944448737642738, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
       propertyPath: damagePerTick
-      value: 10
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 19944448737642738, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
       propertyPath: linternaEnMano
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19944448737642738, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
+      propertyPath: perdidaBateria
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 19944448737642738, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
@@ -1140,9 +1225,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
+      propertyPath: pressF
+      value: 
+      objectReference: {fileID: 490846752}
+    - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
+      propertyPath: bateryPickUp
+      value: 
+      objectReference: {fileID: 884287728}
+    - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
+      propertyPath: pickUpRadius
+      value: 1.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
       propertyPath: barraDeEstres
       value: 
       objectReference: {fileID: 1932849343}
+    - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
+      propertyPath: lanternPickUp
+      value: 
+      objectReference: {fileID: 264892448}
     - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
       propertyPath: lifeChangeRate
@@ -1150,9 +1255,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
+      propertyPath: pressFIndicator
+      value: 
+      objectReference: {fileID: 490846752}
+    - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
       propertyPath: pantallaMenuDerrota
       value: 
       objectReference: {fileID: 460494740}
+    - target: {fileID: 2293899654410503911, guid: 72428cf387c294c48a86ecabea2f6ab1,
+        type: 3}
+      propertyPath: pickUpCollisionLayer.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
     - target: {fileID: 6647547206378692706, guid: 72428cf387c294c48a86ecabea2f6ab1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1926,11 +2041,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasBarra
       objectReference: {fileID: 0}
-    - target: {fileID: 8342278680357636779, guid: b277eab8106f46647973996e17e595cd,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2279,6 +2389,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1189519724998978953, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1715607295333589692, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4525447954027788238, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 6690899376718822761, guid: ab3b9897a2a10ad4889851499efd017a,
         type: 3}
       propertyPath: rb
@@ -2294,6 +2419,26 @@ PrefabInstance:
       propertyPath: linternaPlayer
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7247734033922658504, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7666289713713721835, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8209056377192189440, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8209056377192189440, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Batery
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1116454090633362677, guid: ab3b9897a2a10ad4889851499efd017a, type: 3}
     m_RemovedGameObjects: []
@@ -2303,6 +2448,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 884287728}
+    - targetCorrespondingSourceObject: {fileID: 8209056377192189440, guid: ab3b9897a2a10ad4889851499efd017a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 884287730}
   m_SourcePrefab: {fileID: 100100000, guid: ab3b9897a2a10ad4889851499efd017a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

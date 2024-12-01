@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-     private float maxHealth = 100;
+    private float maxHealth = 100;
     [SerializeField] private float health;
-    
-    private void Awake()
+
+    private void Start()
     {
-        health = maxHealth;  
+        health = maxHealth;
     }
 
     public void TakeDamage(float damage)
     {
-        health -= damage * Time.fixedDeltaTime;
+        health -= damage * Time.deltaTime;
 
         //if (health <= 30)
         //{
         //    enemy.Flee();
-            
+
         //}
-        if(health <= 0)
+        if (health <= 0)
         {
             Die();
         }
@@ -32,3 +32,4 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 }
+

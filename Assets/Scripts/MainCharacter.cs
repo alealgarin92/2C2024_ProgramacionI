@@ -16,7 +16,10 @@ public class MainCharacter : MonoBehaviour
     [SerializeField] private float CrouchingSpeed;
     [SerializeField] private Vector2 mouseSensitivity;
     [SerializeField] private Transform raycastOrigin;
-    
+    [SerializeField] private float pickUpRadius;
+    [SerializeField] private LayerMask pickUpCollisionLayer;
+    [SerializeField] private GameObject pressFIndicator;
+
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float jumpForce;
@@ -33,6 +36,11 @@ public class MainCharacter : MonoBehaviour
 
     //Patalla de derrota, victoria y pausa
     [SerializeField] private GameObject pantallaMenuDerrota;
+
+    [SerializeField] private PickUpLantern lanternPickUp;
+    [SerializeField] private PickUpBatery bateryPickUp;
+    [SerializeField] private LlavePickup pickUpkeys;
+    [SerializeField] private SubePickup pickUpSube;
 
     //Barra de vida
     [SerializeField] private Image barraDeEstres;
@@ -59,8 +67,10 @@ public class MainCharacter : MonoBehaviour
     public float lifeChangeRate = 5f; // Cuánto aumenta o disminuye la vida por segundo
     private Light currentLight; // Referencia a la luz que afecta al personaje
     private bool isInLight = false; // Verifica si está en la luz o en la sombra
+    private bool isInRange = false; // Indica si el jugador está en rango de interacción
+    private string currentTag; // Almacena el tag del objeto actual en rango
 
-    
+
     private float maxHealth = 100;
     private float health;
     private void Start()
@@ -188,8 +198,6 @@ public class MainCharacter : MonoBehaviour
             StartJump();
         }
 
-        barraDeEstres.fillAmount = health / maxHealth;
-
         //PRUEBA DE LUCES Y SOMBRAS
 
         // Cambia la salud dependiendo de si está en la luz o en la sombra
@@ -213,15 +221,26 @@ public class MainCharacter : MonoBehaviour
 
         }
 
+        // Detectar objetos interactuables en cada frame
+        CheckProximity();
+
+        // Verificar si el jugador presiona "F" mientras está en rango
+        if (isInRange && Input.GetKeyDown(KeyCode.F))
+        {
+            InteractWithObject();
+        }
+
     }
 
     void IncreaseHealth(float amount)
     {
+        barraDeEstres.fillAmount = health / maxHealth;
         GameManagerTest.instance.IncreaseHealth(amount); 
     }
 
     void DecreaseHealth(float amount)
     {
+        barraDeEstres.fillAmount = health / maxHealth;
         GameManagerTest.instance.DecreaseHealth(amount);
     }
     // Detecta si el personaje entra en una zona de luz
@@ -262,7 +281,6 @@ public class MainCharacter : MonoBehaviour
         }
     }
 
-
     private void Jump()
     {
         //No puede saltar si el piso esta muy lejos
@@ -276,13 +294,71 @@ public class MainCharacter : MonoBehaviour
         }
     }
 
+    // Detecta si un objeto está en rango
+    private void CheckProximity()
+    {
+        Collider[] collisions = Physics.OverlapSphere(transform.position, pickUpRadius, pickUpCollisionLayer);
 
-    
+        if (collisions.Length > 0)
+        {
+            if (!isInRange)
+            {
+                isInRange = true;
+                pressFIndicator.SetActive(true); // Muestra "Press F"
+            }
 
+            // Detectar el tag del primer objeto en rango
+            currentTag = collisions[0].tag;
+        }
+        else
+        {
+            if (isInRange)
+            {
+                isInRange = false;
+                pressFIndicator.SetActive(false); // Oculta "Press F"
+                currentTag = null; // Limpia el tag actual
+            }
+        }
+    }
+
+    // Maneja la interacción con el objeto detectado
+    private void InteractWithObject()
+    {
+        if (string.IsNullOrEmpty(currentTag)) return;
+
+        switch (currentTag)
+        {
+            case "Batery":
+                Debug.Log("El jugador recoge una batería.");
+                // Acciones específicas para "Batery"
+                bateryPickUp.BateryPickUp();
+                break;
+
+            case "LinternaSinLuz":
+                Debug.Log("El jugador recoge una linterna sin luz.");
+                // Acciones específicas para "LinternaSinLuz"
+                lanternPickUp.LanternPickUp();
+                break;
+
+            case "Sube":
+                Debug.Log("El jugador interactúa con un objeto que lo sube.");
+                // Acciones específicas para "Sube"
+                pickUpSube.PickUpSube();
+                break;
+
+            case "Llaves":
+                Debug.Log("El jugador recoge unas llaves.");
+                // Acciones específicas para "Llaves"
+                pickUpkeys.pickUpKeys();
+                break;
+
+            default:
+                Debug.Log("Tag no reconocido: " + currentTag);
+                break;
+        }
+    }
 
     //Se realiza animacion de salto
-
-
     private void StartJump()
     {
         oskar.SetTrigger("Jump");
@@ -295,13 +371,6 @@ public class MainCharacter : MonoBehaviour
         {
             GameManagerTest.instance.IncreaseHealth(healAmount);
         }
-    }
-
-    //Funcion para visualizar el raycast de salto y el de deteccion de enmigos
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(raycastOrigin.position, raycastOrigin.position + Vector3.down * jumpCheckDistance);
     }
 
 
@@ -343,6 +412,14 @@ public class MainCharacter : MonoBehaviour
             pantallaMenuDerrota.SetActive(true);
             Time.timeScale = 0;
         }
+    }
+
+    //Funcion para visualizar el raycast de salto y el de deteccion de enmigos
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(raycastOrigin.position, raycastOrigin.position + Vector3.down * jumpCheckDistance);
+        Gizmos.DrawWireSphere(transform.position, pickUpRadius);
     }
 
 }

@@ -55,6 +55,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   visualPilas: {fileID: 0}
+  pressF: {fileID: 0}
 --- !u!1 &8192758999053354419
 GameObject:
   m_ObjectHideFlags: 0

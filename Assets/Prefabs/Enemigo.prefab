@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 7967242327148044746}
   - component: {fileID: 7955504149324686102}
   - component: {fileID: 5329146084741027108}
-  - component: {fileID: 6491144499260279168}
   - component: {fileID: 4524059629909908619}
+  - component: {fileID: 2606564856412695614}
   m_Layer: 7
   m_Name: Enemigo
   m_TagString: Enemy
@@ -108,19 +108,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6491144499260279168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6497839136361621264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61368754b1b173942a261c34311ded01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
 --- !u!114 &4524059629909908619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,6 +127,19 @@ MonoBehaviour:
   rotationSpeed: 0
   characterAnimator: {fileID: 0}
   damage: 0
+--- !u!114 &2606564856412695614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6497839136361621264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25b63a85f5729e4cb032ce2b1d13506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
 --- !u!1001 &9119862458235396970
 PrefabInstance:
   m_ObjectHideFlags: 0

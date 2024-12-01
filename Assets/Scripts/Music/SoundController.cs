@@ -6,7 +6,7 @@ public class SoundController : MonoBehaviour
 {
     [SerializeField] private AudioSource mainSound;
 
-    [SerializeField] private AudioClip levantarLinterna, levantarBateria, TomarLLaves;
+    [SerializeField] private AudioClip levantarLinterna, levantarBateria, tomarLlaves, tomarSube;
 
 
     public void ChangeSound(AudioClip newClip)
@@ -16,7 +16,7 @@ public class SoundController : MonoBehaviour
         //Cambiar la musica
         mainSound.clip = newClip;
         //Reproducir la nueva musica
-        mainSound.PlayOneShot(levantarLinterna);
+        mainSound.PlayOneShot(newClip);
     }
 
     public void PlaySound1()
@@ -31,7 +31,11 @@ public class SoundController : MonoBehaviour
 
     public void PlaySound3()
     {
-        ChangeSound(TomarLLaves);
+        ChangeSound(tomarLlaves);
     }
 
+    public void PlaySound4()
+    {
+        ChangeSound(tomarSube);
+    } 
 }
