@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class EnemyState
-{
-    public EnemyStates currentState;
-}
+#if UNITY_EDITOR
+using UnityEditor;
+#endif  
 
-public enum EnemyStates
+
+public enum EstadosEnemy
 {
-    Atacking = 0,
-    Fleeing = 1,
-    Pursuit = 2,
-    Stay = 3,
+    Stay = 0,
+    Pursuit = 1,
+    Atacking = 2,
+    Patrol = 3,
     Dead = 4,
     LookAtPlayer
 }
@@ -24,130 +24,217 @@ public class EnemyBehaviour : MonoBehaviour
     //private float currentHealt;
     //private bool isConfused;
 
-    [SerializeField] private EnemyStates startingtState;
-    [SerializeField] private MainCharacter player;
-    [SerializeField] private float movementSpeed;
+    [SerializeField] private EstadosEnemy startingtState;
     [SerializeField] private float pursuitThreshold;
+    [SerializeField] private float attackingThreshold;
+    [SerializeField] private float escapeThreshold;
+
+    [SerializeField] private bool autoSelectTarget = true;
+    [SerializeField] private Transform player;
+    [SerializeField] private float distance;
+
+    [SerializeField] private Transform[] puntosMov;
+    [SerializeField] private float distminima;
+    private int siguientepaso = 0;
+
+    [SerializeField] private float runSpeed;
+    [SerializeField] private float walkSpeed;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private Animator characterAnimator;
-    [SerializeField] private float damage;
+
+    [SerializeField] private bool statePatrol;
+    [SerializeField] private bool stateStay;
+
+    //[SerializeField] private float damage;
+    //private SpriteRenderer spriteRenderer;
 
 
-    void Update()
+    private void Awake()
     {
-        CheckStateUpdate();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    private void Update()
+    {
+        CheckState();
+    }
+
+    private void CheckState()
+    {
+        var diff = transform.position - player.transform.position;
+        distance = diff.magnitude;
         //Todo
         switch (startingtState)
         {
-            case EnemyStates.Atacking:
-                Atacking();
+            case EstadosEnemy.Stay:
+                Stay();
                 break;
-            case EnemyStates.Fleeing:
-                Flee();
-                break;
-            case EnemyStates.Pursuit:
+            case EstadosEnemy.Pursuit:
                 Pursuit();
                 break;
-            case EnemyStates.Stay:
-                Stay();
+            case EstadosEnemy.Atacking:
+                Atacking();
                 break;
-            case EnemyStates.LookAtPlayer:
-                LookRotationQuaternion();
+            case EstadosEnemy.Patrol:
+                Patrol();
+                break;
+            case EstadosEnemy.Dead:
+                Dead();
+                break;
+            case EstadosEnemy.LookAtPlayer:
+                LookRotationPlayer();
                 break;
             default:
-                Stay();
                 break;
         }
     }
 
-    //Modo mas simple de mirar al jugador 
-    private void LookAtPlayer()
+    private void ChangeState (EstadosEnemy e)
     {
-        transform.LookAt(player.transform.position);
-    }
-
-    //Modo alternativo para mirar al jugador
-    private void LookRotationQuaternion()
-    {
-        var newRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * rotationSpeed);
-    }
-
-    //Se checkea el estado del enemigo
-    private void CheckStateUpdate()
-    {
-        //Si el player esta muy lejos, me quedo quieto.
-        var diff = transform.position - player.transform.position;
-        var distance = diff.magnitude;
-
-        if (distance > pursuitThreshold)
+        switch (e)
         {
-            if (startingtState == EnemyStates.Pursuit)
-            {
-                startingtState = EnemyStates.Stay;
-            }
+            case EstadosEnemy.Stay:
+                break;
+            case EstadosEnemy.Pursuit:
+                break;
+            case EstadosEnemy.Atacking:
+                break;
+            case EstadosEnemy.Patrol:
+                break;
+            case EstadosEnemy.Dead:
+
+                break;
+            default:
+                break;
         }
-        else
-        {
-            startingtState = EnemyStates.Pursuit;
-            
-        }
+        startingtState = e;
     }
 
-    //El enemigo esta quieto
     private void Stay()
     {
-        Idle();
+        statePatrol = false;
+        stateStay = true;
+        if (distance < pursuitThreshold) 
+        {
+            ChangeState(EstadosEnemy.Pursuit);
+        }
+        characterAnimator.SetBool("isAtacking", false);
+        characterAnimator.SetBool("isRunning", false);
     }
 
     //El enemigo gira hacia el jugador y lo persigue
     private void Pursuit()
     {
-        LookRotationQuaternion();
-
-        transform.position += transform.forward * (Time.deltaTime * movementSpeed);
-        StartRuning();
-    }
-
-    //El enemigo se aleja del jugador
-    public void Flee()
-    {
-        Vector3 a = player.transform.position;
-        Vector3 b = transform.position;
-        Vector3 diff = (b - a).normalized;
-
-
-        transform.position += diff * (Time.deltaTime * movementSpeed);
-    }
-
-    private void StartRuning()
-    {
+        if (distance < attackingThreshold)
+        {
+            ChangeState(EstadosEnemy.Atacking);
+        }
+        else if (distance > escapeThreshold) 
+        {
+            if (!statePatrol && stateStay == true)
+            {
+                ChangeState(EstadosEnemy.Stay);
+            }
+            else 
+            {
+                ChangeState(EstadosEnemy.Patrol);
+            }
+        }
+        characterAnimator.SetBool("isAtacking", false);
+        characterAnimator.SetBool("isWalking", false);
         characterAnimator.SetBool("isRunning", true);
-    }
-    private void Idle()
-    {
-        characterAnimator.SetBool("isRunning", false);
+        LookRotationPlayer();
+        transform.position += transform.forward * (Time.deltaTime * runSpeed);
     }
 
     private void Atacking()
     {
+        if (distance > attackingThreshold + 0.4f)
+        {
+            ChangeState (EstadosEnemy.Pursuit);
+        }
         characterAnimator.SetBool("isAtacking", true);
     }
 
-
-    private void OnCollisionStay(Collision other)
+    private void Patrol()
     {
-        var colliderGameObject = other.gameObject;
-        //Necesito chequear la tag/label/etiqueta de el gameobject
+        statePatrol = true;
+        stateStay = false;
 
-        MainCharacter player = colliderGameObject.GetComponent<MainCharacter>();
-
-        if (player != null) //Tiene el componente player
+        if (distance < pursuitThreshold)
         {
-            //Es un player
-            Debug.Log("Choco contra el player");
-            Atacking();
-            player.TakeDamage(damage * Time.deltaTime);
+            ChangeState(EstadosEnemy.Pursuit);
+        }
+        characterAnimator.SetBool("isAtacking", false);
+        characterAnimator.SetBool("isRunning", false);
+        characterAnimator.SetBool("isWalking", true);
+
+        if (puntosMov == null || puntosMov.Length == 0) return;
+
+        Vector3 targetPosition = puntosMov[siguientepaso].position;
+        Vector3 direction = (targetPosition - transform.position).normalized;
+
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+
+
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, targetPosition) < distminima)
+        {
+            siguientepaso = (siguientepaso + 1) % puntosMov.Length;
         }
     }
+    private void Dead()
+    {
+    }
+
+    //Modo mas simple de mirar al jugador 
+    private void LookAtPlayer()
+    {
+        //transform.LookAt(player.transform.position);
+    }
+
+    //Modo alternativo para mirar al jugador
+    private void LookRotationPlayer()
+    {
+        var newRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * rotationSpeed);
+    }
+
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        Handles.color = Color.red;
+        Handles.DrawWireDisc(transform.position, Vector3.up, attackingThreshold);
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, Vector3.up, pursuitThreshold);
+        Handles.color = Color.green;
+        Handles.DrawWireDisc(transform.position, Vector3.up, escapeThreshold);
+
+    }
+
+#endif
+
+   
+    //private void OnCollisionStay(Collision other)
+    //{
+    //    var colliderGameObject = other.gameObject;
+    //    //Necesito chequear la tag/label/etiqueta de el gameobject
+
+    //    MainCharacter player = colliderGameObject.GetComponent<MainCharacter>();
+
+    //    if (player != null) //Tiene el componente player
+    //    {
+    //        //Es un player
+    //        Debug.Log("Choco contra el player");
+    //        Atacking();
+    //        player.TakeDamage(damage * Time.fixedDeltaTime);
+    //    }
+    //}
 }
