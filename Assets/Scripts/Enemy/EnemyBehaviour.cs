@@ -1,21 +1,21 @@
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif  
-
+using Random = UnityEngine.Random;
 
 public enum EstadosEnemy
 {
     Stay = 0,
     Pursuit = 1,
     Atacking = 2,
-    Patrol = 3,
-    Dead = 4,
+    StayPatrol = 3,
+    StayRandom = 4,
     LookAtPlayer
 }
 public class EnemyBehaviour : MonoBehaviour
@@ -28,6 +28,7 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] private float pursuitThreshold;
     [SerializeField] private float attackingThreshold;
     [SerializeField] private float escapeThreshold;
+    [SerializeField] private float damage;
 
     [SerializeField] private bool autoSelectTarget = true;
     [SerializeField] private Transform player;
@@ -42,8 +43,15 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private Animator characterAnimator;
 
-    [SerializeField] private bool statePatrol;
-    [SerializeField] private bool stateStay;
+    private bool statePatrol;
+    private bool stateStay;
+    private bool stateRandom;
+
+    private int rutina;
+    private float cronometro;
+    private Quaternion angulo;
+    private float grado;
+
 
     //[SerializeField] private float damage;
     //private SpriteRenderer spriteRenderer;
@@ -75,11 +83,11 @@ public class EnemyBehaviour : MonoBehaviour
             case EstadosEnemy.Atacking:
                 Atacking();
                 break;
-            case EstadosEnemy.Patrol:
+            case EstadosEnemy.StayPatrol:
                 Patrol();
                 break;
-            case EstadosEnemy.Dead:
-                Dead();
+            case EstadosEnemy.StayRandom:
+                StayRandom();
                 break;
             case EstadosEnemy.LookAtPlayer:
                 LookRotationPlayer();
@@ -99,10 +107,9 @@ public class EnemyBehaviour : MonoBehaviour
                 break;
             case EstadosEnemy.Atacking:
                 break;
-            case EstadosEnemy.Patrol:
+            case EstadosEnemy.StayPatrol:
                 break;
-            case EstadosEnemy.Dead:
-
+            case EstadosEnemy.StayRandom:
                 break;
             default:
                 break;
@@ -112,8 +119,10 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Stay()
     {
-        statePatrol = false;
         stateStay = true;
+        statePatrol = false;
+        stateRandom = false;
+        
         if (distance < pursuitThreshold) 
         {
             ChangeState(EstadosEnemy.Pursuit);
@@ -131,13 +140,17 @@ public class EnemyBehaviour : MonoBehaviour
         }
         else if (distance > escapeThreshold) 
         {
-            if (!statePatrol && stateStay == true)
+            if (!statePatrol && !stateRandom && stateStay == true)
             {
                 ChangeState(EstadosEnemy.Stay);
             }
-            else 
+            else if (!stateRandom && !stateStay &&  statePatrol == true)
             {
-                ChangeState(EstadosEnemy.Patrol);
+                ChangeState(EstadosEnemy.StayPatrol);
+            }
+            else
+            {
+                ChangeState(EstadosEnemy.StayRandom);
             }
         }
         characterAnimator.SetBool("isAtacking", false);
@@ -160,6 +173,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         statePatrol = true;
         stateStay = false;
+        stateRandom = false;
 
         if (distance < pursuitThreshold)
         {
@@ -189,8 +203,42 @@ public class EnemyBehaviour : MonoBehaviour
             siguientepaso = (siguientepaso + 1) % puntosMov.Length;
         }
     }
-    private void Dead()
+
+    private void StayRandom()
     {
+        stateRandom = true;
+        statePatrol = false;
+        stateStay = false;
+        if (distance < pursuitThreshold)
+        {
+            ChangeState(EstadosEnemy.Pursuit);
+        }
+        characterAnimator.SetBool("isAtacking", false);
+        characterAnimator.SetBool("isRunning", false);
+       
+        cronometro += 1 * Time.deltaTime;
+        if(cronometro >= 3)
+        {
+            rutina = Random.Range(0, 2);
+            cronometro = 0;
+        }
+        switch (rutina)
+        {
+            case 0:
+                characterAnimator.SetBool("isWalking", false);
+                break;
+            case 1:
+                grado = Random.Range(0, 360);
+                angulo = Quaternion.Euler(0, grado, 0);
+                rutina++;
+                break;
+            case 2:
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 0.5f);
+                transform.Translate(Vector3.forward * walkSpeed * Time.deltaTime);
+                characterAnimator.SetBool("isWalking", true);
+                break;
+        }
+
     }
 
     //Modo mas simple de mirar al jugador 
@@ -221,20 +269,20 @@ public class EnemyBehaviour : MonoBehaviour
 
 #endif
 
-   
-    //private void OnCollisionStay(Collision other)
-    //{
-    //    var colliderGameObject = other.gameObject;
-    //    //Necesito chequear la tag/label/etiqueta de el gameobject
+    private void OnCollisionStay(Collision other)
+    {
+        var colliderGameObject = other.gameObject;
+        //Necesito chequear la tag/label/etiqueta de el gameobject
 
-    //    MainCharacter player = colliderGameObject.GetComponent<MainCharacter>();
+        MainCharacter player = colliderGameObject.GetComponent<MainCharacter>();
 
-    //    if (player != null) //Tiene el componente player
-    //    {
-    //        //Es un player
-    //        Debug.Log("Choco contra el player");
-    //        Atacking();
-    //        player.TakeDamage(damage * Time.fixedDeltaTime);
-    //    }
-    //}
+        if (player != null) //Tiene el componente player
+        {
+            //Es un player
+            Debug.Log("Choco contra el player");
+            player.TakeDamage(damage * Time.fixedDeltaTime);
+        }
+    }
+
+    
 }
